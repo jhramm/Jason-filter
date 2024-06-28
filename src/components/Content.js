@@ -25,6 +25,7 @@ export default function Content() {
     getItems();
   }, []);
 
+  // Data direction change code start.
   const sortList = (list, direction) => {
     return [...list].sort((a, b) => {
       if (direction === "a-z") {
@@ -34,6 +35,15 @@ export default function Content() {
       }
     });
   };
+  const handleSort = (e) => {
+    const newDirection = e.target.value;
+    setSortDirection(newDirection);
+    setSavedList(sortList(list, newDirection));
+  };
+
+  // Data direction change code end.
+
+  // Filter for checkboxes start.
 
   const filterData = (val, checked) => {
     let updatedFilters = [];
@@ -61,21 +71,20 @@ export default function Content() {
       getItems();
     }
   };
+  // Filter for checkboxes end.
+
+  // search filter by title start
 
   const searchList = () => {
     const value = searchRef.current.value.toLowerCase();
     const filterList = list.filter((item) => {
+      // more data can be added to search here example `${item.content}`
       const input = item.title.toLowerCase();
       return input.includes(value);
     });
     setSavedList(sortList(filterList, sortDirection));
   };
-
-  const handleSort = (e) => {
-    const newDirection = e.target.value;
-    setSortDirection(newDirection);
-    setSavedList(sortList(list, newDirection));
-  };
+  // search filter by title end
 
   return (
     <>
@@ -140,7 +149,7 @@ export default function Content() {
         <div>
           <a href="/additem">
             {" "}
-            <button>Add Item</button>
+            <button className="btn-style">Add Item</button>
           </a>
         </div>
       </div>

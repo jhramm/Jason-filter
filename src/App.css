@@ -120,6 +120,9 @@ textarea.input-field {
   border-radius: 10px;
   cursor: pointer;
 }
+.btn-style {
+  padding: 5px 20px;
+}
 
 .footer-container {
   display: flex;

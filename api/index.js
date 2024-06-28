@@ -33,6 +33,16 @@ app.get("/items", async (req, res) => {
   }
 });
 
+app.post("/filteritems", async (req, res) => {
+  try {
+    const categories = req.body.categories;
+    const data = await Items.find({ category: { $in: categories } });
+    res.status(200).send(data);
+  } catch (error) {
+    res.status(500).send("Something went wrong");
+  }
+});
+
 const port = 8080;
 
 app.listen(port, () => {

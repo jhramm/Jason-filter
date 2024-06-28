@@ -1,37 +1,66 @@
-import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react'
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
 
 export default function Content() {
   const [list, setList] = useState([]);
   const searchRef = useRef();
   const [savedList, setSavedList] = useState([]);
-  const [sortDirection, setSortDirection] = useState('a-z');
+  const [sortDirection, setSortDirection] = useState("a-z");
+  const [filterItems, setFilterItems] = useState([]);
 
   const getItems = async () => {
-
-    axios.get('http://localhost:8080/items').then(res => {
-       console.log(res.data)
-       setList(res.data);
-       setSavedList(res.data);
-    }).catch((e) => {
-       console.log(e)
-    })
-  }
+    axios
+      .get("http://localhost:8080/items")
+      .then((res) => {
+        console.log(res.data);
+        setList(res.data);
+        setSavedList(res.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
 
   useEffect(() => {
-    getItems()
+    getItems();
   }, []);
 
   const sortList = (list, direction) => {
-       return [...list].sort((a, b) => {
-        if (direction === 'a-z') {
-          return a.title.localeCompare(b.title);
-        } else {
-          return b.title.localeCompare(a.title);
-        }
-       });
-  }
+    return [...list].sort((a, b) => {
+      if (direction === "a-z") {
+        return a.title.localeCompare(b.title);
+      } else {
+        return b.title.localeCompare(a.title);
+      }
+    });
+  };
 
+  const filterData = (val, checked) => {
+    let updatedFilters = [];
+    if (checked) {
+      updatedFilters = [...filterItems, val];
+    } else {
+      updatedFilters = filterItems.filter((item) => item !== val);
+    }
+    setFilterItems(updatedFilters);
+
+    if (updatedFilters.length > 0) {
+      const payload = {
+        categories: updatedFilters,
+      };
+      axios
+        .post("http://localhost:8080/filteritems", payload)
+        .then((res) => {
+          console.log(res.data);
+          setSavedList(res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } else {
+      getItems();
+    }
+  };
 
   const searchList = () => {
     const value = searchRef.current.value.toLowerCase();
@@ -40,26 +69,35 @@ export default function Content() {
       return input.includes(value);
     });
     setSavedList(sortList(filterList, sortDirection));
-  }
+  };
 
   const handleSort = (e) => {
     const newDirection = e.target.value;
     setSortDirection(newDirection);
     setSavedList(sortList(list, newDirection));
-  }
+  };
 
   return (
     <>
       <div className="nav-container">
         <div>
-          <input type="text" id='search' ref={searchRef} placeholder="Filter by title" onChange={searchList} />
+          <input
+            type="text"
+            id="search"
+            ref={searchRef}
+            placeholder="Filter by title"
+            onChange={searchList}
+          />
         </div>
         <div>
           <input
             type="checkbox"
             id="security"
             name="security"
-            value="security"
+            value="Cyber Security"
+            onChange={(e) => {
+              filterData(e.target.value, e.target.checked);
+            }}
           />
           <label htmlFor="security">Cyber Security</label>
         </div>
@@ -68,7 +106,10 @@ export default function Content() {
             type="checkbox"
             id="marketing"
             name="marketing"
-            value="marketing"
+            value="Digital Marketing"
+            onChange={(e) => {
+              filterData(e.target.value, e.target.checked);
+            }}
           />
           <label htmlFor="marketing">Digital Marketing</label>
         </div>
@@ -77,13 +118,21 @@ export default function Content() {
             type="checkbox"
             id="development"
             name="development"
-            value="development"
+            value="Web Development"
+            onChange={(e) => {
+              filterData(e.target.value, e.target.checked);
+            }}
           />
           <label htmlFor="development">Web Development</label>
         </div>
         <div className="sort-dir">
           <label htmlFor="category">Sort Direction: </label>
-          <select id="category" name="category" onChange={handleSort} value={sortDirection}>
+          <select
+            id="category"
+            name="category"
+            onChange={handleSort}
+            value={sortDirection}
+          >
             <option value="a-z">A to Z</option>
             <option value="z-a">Z to A</option>
           </select>
@@ -98,17 +147,15 @@ export default function Content() {
       <div className="content-container">
         <div className="content-cards">
           {savedList.map((item) => {
-             return (
-               <div className="card">
-                 <h2>{item.title}</h2>
-                 <p>
-                  {item.content}
-                 </p>
-                 <p>
-                   <em>{item.category}</em>
-                 </p>
-               </div>
-             );
+            return (
+              <div className="card">
+                <h2>{item.title}</h2>
+                <p>{item.content}</p>
+                <p>
+                  <em>{item.category}</em>
+                </p>
+              </div>
+            );
           })}
         </div>
       </div>

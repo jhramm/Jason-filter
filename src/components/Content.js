@@ -147,7 +147,7 @@ export default function Content() {
           </select>
         </div>
         <div>
-          <a href="/additem">
+          <a href="https://filtering-react.netlify.app/additem">
             {" "}
             <button className="btn-style">Add Item</button>
           </a>

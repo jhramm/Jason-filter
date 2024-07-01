@@ -10,7 +10,7 @@ export default function Content() {
 
   const getItems = async () => {
     axios
-      .get("http://localhost:8080/items")
+      .get("https://filter-api-vcyp.onrender.com/items")
       .then((res) => {
         console.log(res.data);
         setList(res.data);

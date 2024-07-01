@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 export default function Content() {
   const [list, setList] = useState([]);
@@ -147,10 +148,10 @@ export default function Content() {
           </select>
         </div>
         <div>
-          <a href="https://filtering-react.netlify.app/additem">
+          <Link to="/additem">
             {" "}
             <button className="btn-style">Add Item</button>
-          </a>
+          </Link>
         </div>
       </div>
       <div className="content-container">

@@ -24,7 +24,7 @@ export default function AddItem() {
       category: categoryRef.current.value,
     };
     axios
-      .post("http://localhost:8080/items", payload)
+      .post("https://filter-api-vcyp.onrender.com/items", payload)
       .then((res) => {
         console.log(res.data);
         titleRef.current.value = "";

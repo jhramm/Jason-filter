@@ -59,7 +59,7 @@ export default function Content() {
         categories: updatedFilters,
       };
       axios
-        .post("http://localhost:8080/filteritems", payload)
+        .post("https://filter-api-vcyp.onrender.com/filteritems", payload)
         .then((res) => {
           console.log(res.data);
           setSavedList(res.data);
